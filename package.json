@@ -1,0 +1,20 @@
+{
+  "name": "the_social_network",
+  "version": "1.0.0",
+  "private": true,
+  "description": "social_app",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon",
+    "dev": "nodemon server"
+  },
+  "keywords": [],
+  "author": "JLML",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.7",
+    "nodemon": "^2.0.13",
+    "validator": "^13.6.0"
+  }
+}
