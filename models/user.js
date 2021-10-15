@@ -3,10 +3,10 @@ const { isEmail } =  require('validator')
 
 const UserSchema = new Schema(
   {
-    userName: {
+    username: {
       type: String,
-      minlength: 6,
-      maxlength: 16,
+      minLength: 6,
+      maxLength: 16,
       required: [true, "this need to be fill"],
       trim: true,
       unique: true,
@@ -17,7 +17,7 @@ const UserSchema = new Schema(
       trim: true,
       unique: true,
       lowercase: true,
-      validate: [ isEmail , 'please add a valid email address' ]
+      validate: [isEmail, "please add a valid email address"],
     },
     thoughts: [
       {
@@ -25,7 +25,12 @@ const UserSchema = new Schema(
         ref: "Thought",
       },
     ],
-    friends: [UserSchema],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     toJSON: {
@@ -38,10 +43,7 @@ const UserSchema = new Schema(
 );
 
 UserSchema.virtual("friendCount").get(function () {
-  return this.friends.reduce(
-    (total, friends) => total + friends.replies.length + 1,
-    0
-  );
+  return this.friends.length;
 });
 
 const User = model("User", UserSchema);
