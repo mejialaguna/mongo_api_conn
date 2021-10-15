@@ -20,7 +20,7 @@ const userController = {
         res.status(404).json(err);
       });
   },
-  getUserById(params, res) {
+  getUserById({ params }, res) {
     User.findOne({ _id: params.id })
       .populate({
         path: "friends", //user schema (friends object line 28)
@@ -35,10 +35,7 @@ const userController = {
             .json({ message: "oops.... theres no one with that id" });
           return;
         }
-        res.json({
-          dbUserData,
-          message: "user located",
-        });
+        res.json(dbUserData);
       })
       .catch((err) => {
         console.log(err);
@@ -81,10 +78,11 @@ const userController = {
       });
   },
   deleteUser({ params }, res) {
-    User.findOneAndDelete({ id_: params.id })
+    User.findOneAndDelete({ _id: params.id })
       .then((dbUserData) => {
         if (!dbUserData) {
           res.status(404).json({ message: "invalid id please try again" });
+          return;
         }
         res.json({
           dbUserData,
