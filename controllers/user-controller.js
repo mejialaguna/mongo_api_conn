@@ -9,12 +9,12 @@ const userController = {
       })
       .select("-__v")
       .sort({ _id: -1 })
-      .then((dbUserData) =>
+      .then((dbUserData) => {
         res.json({
           dbUserData,
           message: "all user found",
         })
-      )
+      })
       .catch((err) => {
         console.log(err);
         res.status(404).json(err);
@@ -35,7 +35,10 @@ const userController = {
             .json({ message: "oops.... theres no one with that id" });
           return;
         }
-        res.json(dbUserData);
+        res.json({
+          dbUserData,
+          message: 'user found'
+        });
       })
       .catch((err) => {
         console.log(err);

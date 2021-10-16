@@ -55,12 +55,7 @@ const ThoughtSchema = new Schema(
       minLength: 6,
       maxLength: 16,
     },
-    reactions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Thought",
-      },
-    ],
+    reactions: [ReactionSchema],
   },
   {
     toJSON: {
