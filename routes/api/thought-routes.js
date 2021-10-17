@@ -14,7 +14,7 @@ router.route("/")
     .get(getAllThought);
 
 router.route('/:userId')
-.post(createThought);
+    .post(createThought);
 
 router.route("/:thoughtId")
     .get(getThoughtById)
