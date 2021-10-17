@@ -21,7 +21,7 @@ const thoughtController = {
       });
   },
   getThoughtById({ params }, res) {
-    Thought.findOne({ _id: params.id })
+    Thought.findOne({ _id: params.thoughtId })
       .populate({
         path: "User",
         select: "-__v",
@@ -67,7 +67,7 @@ const thoughtController = {
       });
   },
   updateThought({ params, body }, res) {
-    Thought.findOneAndUpdate({ _id: params.id }, body, {
+    Thought.findOneAndUpdate({ _id: params.thoughtId }, body, {
       new: true,
       runValidators: true,
     })
@@ -87,10 +87,10 @@ const thoughtController = {
       });
   },
   deleteThought({ params }, res) {
-    Thought.findOneAndDelete({ _id: params.id })
+    Thought.findOneAndDelete({ _id: params.thoughtId })
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
-          res.status(404).json({ message: "oops... invalid id" });
+          res.status(404).json({ message: "oops... invalid thought id" });
           return;
         }
         return User.findOneAndUpdate(
@@ -101,8 +101,12 @@ const thoughtController = {
       })
       .then((dbUserData) => {
         if (!dbUserData) {
-          res.status(400).json({ message: "great thought deleted" });
+          res.status(400).json({ message: "no user found" });
         }
+        res.json({
+          dbUserData,
+          message: "thought deleted"
+        });
       })
       .catch((err) => {
         console.log(err);
