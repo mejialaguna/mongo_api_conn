@@ -33,7 +33,7 @@ const thoughtController = {
         }
         res.json({
           dbThoughtData,
-          message: "here is you thought with the user",
+          message: "here is your thought with the user",
         });
       })
       .catch((err) => {
@@ -41,13 +41,14 @@ const thoughtController = {
         res.status(400).json(err);
       });
   },
-  createThought({ body }, res) {
+  createThought({ params , body }, res) {
+    console.log("=================================", body)
     Thought.create(body)
       .then(({ _id }) => {
         return User.findOneAndUpdate(
-          { _id: body.userId },
+          { _id: params.userId },
           { $push: { thoughts: _id } },
-          { new: true, runValidators: true }
+          { new: true }
         );
       })
       .then((dbUserData) => {
@@ -89,27 +90,65 @@ const thoughtController = {
     Thought.findOneAndDelete({ _id: params.id })
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
-          res.status(404).json({ message: 'oops... invalid id' })
+          res.status(404).json({ message: "oops... invalid id" });
           return;
         }
         return User.findOneAndUpdate(
           { _id: params.userId },
           { $pull: { thoughts: params.thoughtId } },
           { new: true }
-        )        
+        );
       })
       .then((dbUserData) => {
         if (!dbUserData) {
-          res.status(400).json({message: 'great thought deleted'})
+          res.status(400).json({ message: "great thought deleted" });
         }
       })
       .catch((err) => {
-        console.log(err)
-        res.status(err)
-    })
+        console.log(err);
+        res.status(err);
+      });
   },
   createReaction({ params, body }, res) {
-    Thought.findOneAndUpdate
+    Thought.findOneAndUpdate(
+      { _id: params.thoughtId },
+      { $push: { reactions: body } },
+      { new: true, runValidators: true }
+    )
+      .sort({ _id: -1 })
+      .then((dbThoughtData) => {
+        if (!dbThoughtData) {
+          res
+            .status(404)
+            .json({ message: "sorry ... invalid thought ID try again" });
+          return;
+        }
+        res.json({
+          dbThoughtData,
+          message: " reaction added to you thought",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(404).json(err);
+      });
+  },
+  deleteReaction({ params }, res) {
+    Thought.findOneAndUpdate(
+      { _id: params.thoughtId },
+      { $pull: { reactions: { reactionId: params.reactionId } } },
+      { new: true, runValidators: true }
+    )
+      .then((dbThoughtData) => {
+        res.json({
+          dbThoughtData,
+          message: " reaction deleted from your thoughts",
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(404).json(err);
+      });
   }
 };
 
