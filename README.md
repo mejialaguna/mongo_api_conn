@@ -5,7 +5,7 @@
   <div align="center">
   
   
-  <h1> the_social_network <br> 
+  <h1> api_ momgo <br> 
    <img src="https://img.shields.io/badge/MongoDB-blue"  />
 </h1>
 
